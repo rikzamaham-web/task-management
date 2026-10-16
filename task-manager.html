@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Task Management</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- <script src="script.js" defer></script>/ -->
+</head>
+<body>
+  <div class="app">
+<!-- side bar content -->
+    <aside class="sidebar">
+      <a class="brand" href="#">
+        <span class="brand-icon">✓</span>
+        TaskFlow
+      </a>
+
+      <p class="side-label">WORKSPACE</p>
+      <nav class="navigation">
+        <button class="nav-btn active" data-filter="all">▦ All Tasks <span id="allCount">0</span></button>
+        <button class="nav-btn" data-filter="pending">◷ Pending <span id="pendingCount">0</span></button>
+        <button class="nav-btn" data-filter="completed">✓ Completed <span id="completedCount">0</span></button>
+        <button class="nav-btn" data-filter="overdue">⚠ Overdue <span id="overdueCount">0</span></button>
+      </nav>
+
+      <p class="side-label">CATEGORIES</p>
+      <div class="categories">
+        <button class="category-btn" data-category="Work"><span class="dot work"></span>Work</button>
+        <button class="category-btn" data-category="Personal"><span class="dot personal"></span>Personal</button>
+        <button class="category-btn" data-category="Learning"><span class="dot learning"></span>Learning</button>
+        <button class="category-btn" data-category="Other"><span class="dot other"></span>Other</button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <p>Stay focused. Get things done.</p>
+        <button id="themeBtn" class="theme-btn">☾ Toggle dark mode</button>
+      </div>
+    </aside>
+<!-- main  content -->
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">YOUR WORKSPACE</p>
+          <h1 id="pageTitle">All Tasks</h1>
+          <p class="subtitle" id="todayText"></p>
+        </div>
+        <button class="primary-btn" id="addTaskBtn">＋ Add Task</button>
+      </header>
+
+      <section class="stats">
+        <article class="stat-card">
+          <div class="stat-top"><span>Total tasks</span><span class="stat-icon purple">▦</span></div>
+          <h2 id="totalStat">0</h2>
+          <p>Tasks in your workspace</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Pending</span><span class="stat-icon orange">◷</span></div>
+          <h2 id="pendingStat">0</h2>
+          <p>Tasks to work on</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Completed</span><span class="stat-icon green">✓</span></div>
+          <h2 id="completedStat">0</h2>
+          <p>Tasks finished</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Overdue</span><span class="stat-icon red">!</span></div>
+          <h2 id="overdueStat">0</h2>
+          <p>Past their due date</p>
+        </article>
+      </section>
+
+      <section class="progress-panel">
+        <div class="progress-info">
+          <div>
+            <h3>Overall progress</h3>
+            <p>Keep going, you're making progress!</p>
+          </div>
+          <strong id="progressPercent">0%</strong>
+        </div>
+        <div class="progress-track">
+          <div id="progressBar" class="progress-fill"></div>
+        </div>
+      </section>
+
+      <section class="task-section">
+        <div class="section-heading">
+          <div>
+            <h2 id="listHeading">Your tasks</h2>
+            <p id="resultCount">0 tasks</p>
+          </div>
+          <div class="view-switch">
+            <button id="listViewBtn" class="view-btn active">☷ List</button>
+            <button id="boardViewBtn" class="view-btn">▦ Board</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span>⌕</span>
+            <input id="searchInput" type="search" placeholder="Search tasks...">
+          </div>
+
+          <select id="priorityFilter" aria-label="Filter by priority">
+            <option value="all">All priorities</option>
+            <option value="High">High priority</option>
+            <option value="Medium">Medium priority</option>
+            <option value="Low">Low priority</option>
+          </select>
+
+          <select id="sortSelect" aria-label="Sort tasks">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="due">Due date</option>
+            <option value="priority">Priority</option>
+            <option value="alphabetical">Alphabetical</option>
+          </select>
+        </div>
+
+        <div id="taskList" class="task-list"></div>
+        <div id="boardView" class="board hidden"></div>
+      </section>
+
+      <footer>TaskFlow <span>•</span> Your productivity, organized.</footer>
+    </main>
+  </div>
+
+  <!-- Add/Edit Task Modal -->
+  <div id="taskModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">TASK DETAILS</p>
+          <h2 id="modalTitle">Create a task</h2>
+        </div>
+        <button type="button" class="icon-btn" id="closeModalBtn" aria-label="Close">✕</button>
+      </div>
+
+      <form id="taskForm">
+        <label for="taskTitle">Task title *</label>
+        <input id="taskTitle" type="text" maxlength="120" placeholder="What do you need to do?" required>
+
+        <label for="taskDescription">Description</label>
+        <textarea id="taskDescription" rows="3" maxlength="1000" placeholder="Add more details (optional)"></textarea>
+
+        <div class="form-row">
+          <div>
+            <label for="taskCategory">Category</label>
+            <select id="taskCategory">
+              <option>Work</option>
+              <option>Personal</option>
+              <option>Learning</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="taskPriority">Priority</label>
+            <select id="taskPriority">
+              <option>Medium</option>
+              <option>High</option>
+              <option>Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="taskDueDate">Due date</label>
+            <input id="taskDueDate" type="date">
+          </div>
+          <div>
+            <label for="taskStatus">Status</label>
+            <select id="taskStatus">
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="secondary-btn" id="cancelModalBtn">Cancel</button>
+          <button type="submit" class="primary-btn" id="saveTaskBtn">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="modal hidden">
+    <div class="modal-card confirm-card">
+      <div class="confirm-symbol">!</div>
+      <h2>Delete this task?</h2>
+      <p>This action cannot be undone.</p>
+      <div class="form-actions">
+        <button class="secondary-btn" id="cancelDeleteBtn">Cancel</button>
+        <button class="delete-btn" id="confirmDeleteBtn">Delete task</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js">
+  </script>
+</body>
+</html>
